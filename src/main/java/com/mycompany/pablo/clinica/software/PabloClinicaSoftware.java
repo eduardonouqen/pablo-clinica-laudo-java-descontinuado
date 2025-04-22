@@ -26,6 +26,7 @@ public class PabloClinicaSoftware {
         JTextField primeiroNome = new JTextField("");
         JTextField sobrenome = new JTextField("");
         JCalendar nascimento = new JCalendar();
+        JTextField escolaridade = new JTextField("");
 
         JButton gerar = new JButton("Gerar Documento");
 
@@ -34,7 +35,7 @@ public class PabloClinicaSoftware {
                 java.util.Date dataSelecionada = nascimento.getDate();
                 java.text.SimpleDateFormat formato = new java.text.SimpleDateFormat("dd/MM/yyyy");
                 String dataFormatada = formato.format(dataSelecionada);
-                gerarDocumento(primeiroNome.getText(), sobrenome.getText(), dataFormatada);
+                gerarDocumento(primeiroNome.getText(), sobrenome.getText(), dataFormatada, escolaridade.getText());
                 JOptionPane.showMessageDialog(frame, "Documento gerado com sucesso!");
             } catch (IOException ex) {
                 ex.printStackTrace();
@@ -48,13 +49,15 @@ public class PabloClinicaSoftware {
         panel.add(sobrenome);
         panel.add(new JLabel("Data de nascimento:"));
         panel.add(nascimento);
+        panel.add(new JLabel("Escolaridade:"));
+        panel.add(escolaridade);
         panel.add(gerar);
 
         frame.getContentPane().add(panel);
         frame.setVisible(true);
     }
 
-    private void gerarDocumento(String nome, String sobrenome, String dataNascimento) throws IOException {
+    private void gerarDocumento(String nome, String sobrenome, String dataNascimento, String escolaridadeText) throws IOException {
         XWPFDocument doc = new XWPFDocument();
         String desktopPath = FileSystemView.getFileSystemView().getHomeDirectory().getAbsolutePath() + "/";
         String fileName = "relatorio_" + nome.replaceAll(" ", "_") + "_" + sobrenome.replaceAll(" ", "_") + ".docx";
@@ -82,6 +85,13 @@ public class PabloClinicaSoftware {
         dataRun.setFontFamily("Arial");
         dataRun.setFontSize(11);
         dataRun.addBreak();
+        
+        XWPFParagraph escolaridadePara = doc.createParagraph();
+        XWPFRun escolaridadeRun = escolaridadePara.createRun();
+        escolaridadeRun.setText("Escolaridade: " + escolaridadeText);
+        escolaridadeRun.setFontFamily("Arial");
+        escolaridadeRun.setFontSize(11);
+        escolaridadeRun.addBreak();
 
         doc.write(out);
         out.close();
