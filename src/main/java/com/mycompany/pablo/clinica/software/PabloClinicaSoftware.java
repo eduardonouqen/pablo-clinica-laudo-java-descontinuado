@@ -16,7 +16,7 @@ public class PabloClinicaSoftware {
     }
 
     private void createUI() {
-        JFrame frame = new JFrame("Clínica São Manuel - Laúdo Psicológico");
+        JFrame frame = new JFrame("Pablo Manoel Sanches - Laúdo Psicológico");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(500, 400);
 
@@ -31,7 +31,10 @@ public class PabloClinicaSoftware {
 
         gerar.addActionListener((ActionEvent e) -> {
             try {
-                gerarDocumento(primeiroNome.getText(), sobrenome.getText());
+                java.util.Date dataSelecionada = nascimento.getDate();
+                java.text.SimpleDateFormat formato = new java.text.SimpleDateFormat("dd/MM/yyyy");
+                String dataFormatada = formato.format(dataSelecionada);
+                gerarDocumento(primeiroNome.getText(), sobrenome.getText(), dataFormatada);
                 JOptionPane.showMessageDialog(frame, "Documento gerado com sucesso!");
             } catch (IOException ex) {
                 ex.printStackTrace();
@@ -43,13 +46,15 @@ public class PabloClinicaSoftware {
         panel.add(primeiroNome);
         panel.add(new JLabel("Sobrenome do paciente:"));
         panel.add(sobrenome);
+        panel.add(new JLabel("Data de nascimento:"));
+        panel.add(nascimento);
         panel.add(gerar);
 
         frame.getContentPane().add(panel);
         frame.setVisible(true);
     }
 
-    private void gerarDocumento(String nome, String sobrenome) throws IOException {
+    private void gerarDocumento(String nome, String sobrenome, String dataNascimento) throws IOException {
         XWPFDocument doc = new XWPFDocument();
         String desktopPath = FileSystemView.getFileSystemView().getHomeDirectory().getAbsolutePath() + "/";
         String fileName = "relatorio_" + nome.replaceAll(" ", "_") + "_" + sobrenome.replaceAll(" ", "_") + ".docx";
@@ -70,6 +75,13 @@ public class PabloClinicaSoftware {
         nomeRun.setFontFamily("Arial");
         nomeRun.setFontSize(11);
         nomeRun.addBreak();
+        
+         XWPFParagraph dataPara = doc.createParagraph();
+        XWPFRun dataRun = dataPara.createRun();
+        dataRun.setText("Data de Nascimento: " + dataNascimento);
+        dataRun.setFontFamily("Arial");
+        dataRun.setFontSize(11);
+        dataRun.addBreak();
 
         doc.write(out);
         out.close();
