@@ -91,6 +91,7 @@ public class PabloClinicaSoftware {
         String fileName = "relatorio_" + nome.replaceAll(" ", "_") + "_" + sobrenome.replaceAll(" ", "_") + ".docx";
         FileOutputStream out = new FileOutputStream(desktopPath + fileName);
 
+        // Título.
         XWPFParagraph title = doc.createParagraph();
         title.setAlignment(ParagraphAlignment.CENTER);
         XWPFRun titleRun = title.createRun();
@@ -100,6 +101,7 @@ public class PabloClinicaSoftware {
         titleRun.setFontSize(15);
         titleRun.addBreak();
         
+        // Identificação.
         XWPFParagraph identify = doc.createParagraph();
         identify.setAlignment(ParagraphAlignment.BOTH);
         XWPFRun identifyRun = identify.createRun();
